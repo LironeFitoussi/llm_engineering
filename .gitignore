@@ -1,4 +1,5 @@
 # Github's default gitignore for Python
+.env 
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

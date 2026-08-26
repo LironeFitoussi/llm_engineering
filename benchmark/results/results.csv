@@ -1,0 +1,11 @@
+api_prompt_tokens_saved,links_removed,naive_api_completion_tokens,naive_api_prompt_tokens,naive_latency_s,naive_link_count,naive_tiktoken,optimized_api_completion_tokens,optimized_api_prompt_tokens,optimized_latency_s,optimized_link_count,optimized_tiktoken,status,tiktoken_saved,tiktoken_saved_pct,url
+104,33,2951,463,24.688,57,453,3432,359,26.673,24,349,ok,104,23.0,https://harmonic.ai/get-discovered
+268,44,6282,2807,47.649,237,2797,6724,2539,44.439,193,2529,ok,268,9.6,https://www.gotfriends.co.il
+188,34,1487,1231,11.39,95,1221,4800,1043,34.93,61,1033,ok,188,15.4,http://www.minutemedia.com
+2496,200,1722,5068,20.239,353,5058,3804,2572,34.227,153,2562,ok,2496,49.3,https://www.priority-software.com
+78,12,10549,1112,98.87,82,1102,5072,1034,35.47,70,1024,ok,78,7.1,https://plc.pearson.com
+303,35,4065,1318,32.369,112,1308,7768,1015,48.554,77,1005,ok,303,23.2,http://www.ness-tech.co.il/
+243,30,5946,875,40.239,74,865,5407,632,30.763,44,622,ok,243,28.1,https://withvayu.com/
+32,7,1681,442,13.834,28,432,3046,410,23.89,21,400,ok,32,7.4,https://treex-robotics.com/
+647,44,7161,3124,59.669,126,3114,12949,2477,93.078,82,2467,ok,647,20.8,https://www.abra-it.com/
+1366,114,3613,2679,27.539,202,2669,11342,1313,80.575,88,1303,ok,1366,51.2,https://www.canditech.io/

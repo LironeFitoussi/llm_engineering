@@ -43,7 +43,9 @@ def summarize(url):
 
 def main():
     """Main entry point for testing."""
-    url = input("Enter a URL to summarize: ")
+    url = input("Enter a URL to summarize: ").strip()
+    if url and not url.startswith(("http://", "https://")):
+        url = "https://" + url
     print("\nFetching and summarizing...\n")
     summary = summarize(url)
     print(summary)

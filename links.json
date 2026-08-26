@@ -1,0 +1,40 @@
+{
+    "links": [
+        {
+            "type": "home page",
+            "url": "https://edwarddonner.com/"
+        },
+        {
+            "type": "about page",
+            "url": "https://edwarddonner.com/about-me-and-about-nebula/"
+        },
+        {
+            "type": "services page",
+            "url": "https://edwarddonner.com/outsmart/"
+        },
+        {
+            "type": "product page",
+            "url": "https://edwarddonner.com/avatar/"
+        },
+        {
+            "type": "service page",
+            "url": "https://edwarddonner.com/proficient/"
+        },
+        {
+            "type": "linkedin page",
+            "url": "https://www.linkedin.com/in/eddonner/"
+        },
+        {
+            "type": "twitter page",
+            "url": "https://twitter.com/edwarddonner"
+        },
+        {
+            "type": "facebook page",
+            "url": "https://www.facebook.com/edward.donner.52"
+        },
+        {
+            "type": "external platform",
+            "url": "https://nebula.io/?utm_source=ed&utm_medium=referral"
+        }
+    ]
+}

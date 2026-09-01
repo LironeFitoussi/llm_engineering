@@ -13,38 +13,37 @@ system_message = """
 You are a helpful assistant for an Airline called FlightAI.
 Give short, courteous answers, no more than 1 sentence.
 Always be accurate. If you don't know the answer, say so.
+You can look up ticket prices and show the customer a picture of a destination.
+Decide for yourself which of those the conversation calls for.
 """
 
-get_ticket_price("Paris")
 def handle_tool_calls(message):
-    responses = []
-    for tool_call in message.tool_calls:
-        if tool_call.function.name == "get_ticket_price":
-            arguments = json.loads(tool_call.function.arguments)
-            city = arguments.get('destination_city')
-            price_details = get_ticket_price(city)
-            responses.append({
-                "role": "tool",
-                "content": price_details,
-                "tool_call_id": tool_call.id
-            })
-    return responses
+    """Run whichever tools the model decided to call.
 
-def handle_tool_calls_and_return_cities(message):
+    Returns the tool results to feed back to the model, plus an image if the
+    model chose to call the artist.
+    """
     responses = []
-    cities = []
+    image = None
     for tool_call in message.tool_calls:
-        if tool_call.function.name == "get_ticket_price":
-            arguments = json.loads(tool_call.function.arguments)
-            city = arguments.get('destination_city')
-            cities.append(city)
-            price_details = get_ticket_price(city)
-            responses.append({
-                "role": "tool",
-                "content": price_details,
-                "tool_call_id": tool_call.id
-            })
-    return responses, cities
+        name = tool_call.function.name
+        arguments = json.loads(tool_call.function.arguments)
+
+        if name == "get_ticket_price":
+            content = get_ticket_price(arguments.get("destination_city"))
+        elif name == "generate_destination_image":
+            city = arguments.get("city")
+            image = artist(city)
+            content = f"An image of {city} is now displayed to the customer."
+        else:
+            content = f"Unknown tool: {name}"
+
+        responses.append({
+            "role": "tool",
+            "content": content,
+            "tool_call_id": tool_call.id
+        })
+    return responses, image
 
 def speak(reply):
     """talker() returns raw mp3 bytes; gr.Audio needs a file path."""
@@ -57,13 +56,13 @@ def speak(reply):
 def chatbot(message, history):
     history = [{"role":h["role"], "content":h["content"]} for h in history]
     messages = [{"role": "system", "content": system_message}] + history + [{"role": "user", "content": message}]
-    response = openai.chat.completions.create(model=MODEL,messages=messages,tools=tools)
-    cities = []
+    response = openai.chat.completions.create(model=MODEL, messages=messages, tools=tools)
     image = None
 
     while response.choices[0].finish_reason == "tool_calls":
         tool_message = response.choices[0].message
-        responses, cities = handle_tool_calls_and_return_cities(tool_message)
+        responses, new_image = handle_tool_calls(tool_message)
+        image = new_image or image
         messages.append(tool_message)
         messages.extend(responses)
         response = openai.chat.completions.create(
@@ -73,9 +72,6 @@ def chatbot(message, history):
         )
 
     reply = response.choices[0].message.content
-
-    if cities:
-        image = artist(cities[0])
 
     # ChatInterface takes the reply itself; extras go to additional_outputs
     return reply, image, speak(reply)
@@ -88,14 +84,22 @@ def chatbot(message, history):
 # image.save("new_york_city.png")
 # print("Saved to new_york_city.png")
 
+# Created unrendered, then .render()ed inside the Blocks below so they live in
+# the same Blocks scope as the ChatInterface -- otherwise they never show up.
 image_output = gr.Image(label="Destination", height=400)
 audio_output = gr.Audio(label="Voice", autoplay=True)
 
-demo = gr.ChatInterface(
-    fn=chatbot,
-    type="messages",
-    additional_outputs=[image_output, audio_output],
-)
+with gr.Blocks(title="FlightAI") as demo:
+    with gr.Row():
+        with gr.Column(scale=3):
+            gr.ChatInterface(
+                fn=chatbot,
+                type="messages",
+                additional_outputs=[image_output, audio_output],
+            )
+        with gr.Column(scale=2):
+            image_output.render()
+            audio_output.render()
 
 if __name__ == "__main__":
     demo.launch()

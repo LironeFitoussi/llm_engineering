@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import gradio as gr
 import json
-from tools.database import *
+from tools import database
 
 load_dotenv(override=True)
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -24,28 +24,6 @@ Give short, courteous answers, no more than 1 sentence.
 Always be accurate. If you don't know the answer, say so.
 """
 
-price_function = {
-    "name": "get_ticket_price",
-    "description": "Get the price of a return ticket to the destination city.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "destination_city": {
-                "type": "string",
-                "description": "The city that the customer wants to travel to",
-            },
-        },
-        "required": ["destination_city"],
-        "additionalProperties": False
-    }
-}
-
-tools = [
-    {
-        "type": "function",
-        "function": price_function
-    }
-]
 
 ticket_prices = {
     "london":799,
@@ -54,9 +32,9 @@ ticket_prices = {
     "sydney": 2999,
     "tel aviv": 1299,
 }
+
 for city, price in ticket_prices.items():
     set_ticket_price(city, price)
-
 
 def handle_tool_call(message):
     tool_call = message.tool_calls[0]
